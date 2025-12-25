@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <title>AI Lover</title>
+</head>
+<body>
+  <h2>💖 AI Lover</h2>
+
+  <input id="msg" placeholder="Nói điều bạn muốn..." />
+  <button onclick="send()">Gửi</button>
+
+  <p id="reply"></p>
+
+  <script>
+    async function send() {
+      const msg = document.getElementById("msg").value;
+      document.getElementById("reply").innerText = "⏳ Đang trả lời...";
+
+      try {
+        const res = await fetch("http://localhost:3000/chat", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ message: msg })
+        });
+
+        const data = await res.json();
+
+        if (data.reply) {
+          document.getElementById("reply").innerText = data.reply;
+        } else {
+          document.getElementById("reply").innerText = "❌ Lỗi: " + data.error;
+        }
+      } catch (err) {
+        document.getElementById("reply").innerText =
+          "❌ Không kết nối được backend";
+        console.error(err);
+      }
+    }
+  </script>
+</body>
+</html>
